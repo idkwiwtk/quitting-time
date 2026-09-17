@@ -25,7 +25,7 @@
 - shadcn/ui·Tailwind 미도입: 클릭 가능한 UI 가 없고 기존 디자인을 그대로 사용. 버튼/링크가 생기면 도입
 
 ## 로그
-- 서버: `logs/YYYY-MM-DD.log` (KST 날짜, 1일 1파일). 개발 시에만 콘솔에도 출력
+- 서버: 개발 시에만 콘솔 + `logs/YYYY-MM-DD.log` (KST 날짜, 1일 1파일). 운영(`NODE_ENV=production`)에서는 콘솔·파일 모두 남기지 않는다
 - 프론트: `NODE_ENV !== 'production'` 일 때만 `console.log`
 
 ## 명령
@@ -39,6 +39,5 @@ npm run build && npm start
 1. 서버에서 `docker compose up -d --build` (재배포도 동일 명령)
    - `Dockerfile`: 멀티 스테이지, `output: "standalone"` 산출물만 담아 `node server.js` 로 실행(non-root)
    - 포트는 `127.0.0.1:3000` 에만 바인딩 — 외부 접근은 nginx 경유
-   - 서버 로그는 `logs` 볼륨에 보존: `docker compose exec web ls logs`, 컨테이너 로그는 `docker compose logs -f`
 2. nginx: `location / { proxy_pass http://127.0.0.1:3000; proxy_set_header Host $host; }`
 3. 확인: `curl -s https://time.thisapple.kr | grep og:title`
