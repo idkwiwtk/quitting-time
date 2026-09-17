@@ -36,6 +36,9 @@ npm run build && npm start
 ```
 
 ## 배포 (기존 nginx 정적 서빙 → 프록시로 교체)
-1. 서버에서 `npm ci && npm run build`, `next start -p 3000` 을 systemd 또는 pm2 로 상시 실행
+1. 서버에서 `docker compose up -d --build` (재배포도 동일 명령)
+   - `Dockerfile`: 멀티 스테이지, `output: "standalone"` 산출물만 담아 `node server.js` 로 실행(non-root)
+   - 포트는 `127.0.0.1:3000` 에만 바인딩 — 외부 접근은 nginx 경유
+   - 서버 로그는 `logs` 볼륨에 보존: `docker compose exec web ls logs`, 컨테이너 로그는 `docker compose logs -f`
 2. nginx: `location / { proxy_pass http://127.0.0.1:3000; proxy_set_header Host $host; }`
 3. 확인: `curl -s https://time.thisapple.kr | grep og:title`
